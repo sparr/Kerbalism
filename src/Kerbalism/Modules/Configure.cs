@@ -209,6 +209,27 @@ namespace KERBALISM
 			// - we avoid corner case when cfg was never set up (because craft was never in VAB)
 			if (Lib.IsEditor() || selected.Count == 0)
 			{
+				// replace selected setups that aren't available (tech not researched, or setup removed from the part config)
+				// - such a slot isn't rendered in the window, so it can't be changed by the player
+				// - prefer an empty setup, to avoid adding mass and cost
+				for (int i = 0; i < selected.Count; ++i)
+				{
+					string setup_name = selected[i];
+					if (unlocked.Exists(k => k.name == setup_name)) continue;
+
+					ConfigureSetup replacement = unlocked.Find(k => IsNoneName(k.name) && selected.IndexOf(k.name) == -1)
+						?? unlocked.Find(k => selected.IndexOf(k.name) == -1);
+					if (replacement != null) selected[i] = replacement.name;
+					else selected.RemoveAt(i--);
+
+					ConfigureSetup locked = setups.Find(k => k.name == setup_name);
+					string setup_title = locked != null ? Localizer.Format(locked.title) : setup_name;
+					Lib.Log("setup '{0}' of '{1}' on {2} isn't available, {3}", Lib.LogLevel.Warning,
+						setup_name, title, part.partInfo.name,
+						replacement != null ? "replaced by '" + replacement.name + "'" : "removed");
+					Message.Post(Local.Configure_setuplocked.Format(part.partInfo.title, setup_title));//"Setup <<2>> on <<1>>\nis not available and has been deselected."
+				}
+
 				while (selected.Count < Math.Min(slots, (uint)unlocked.Count))
 				{
 					selected.Add(unlocked.Find(k => selected.IndexOf(k.name) == -1).name);

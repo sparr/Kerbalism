@@ -533,6 +533,7 @@ namespace KERBALISM
 		public static string Comfort_bonus = GetLoc("Comfort_bonus"); // "bonus"
 		public static string Configure_noconfigure = GetLoc("Configure_noconfigure"); // "Can't reconfigure the component"
 		public static string Configure_dumpexcess = GetLoc("Configure_dumpexcess"); // "Reconfiguring will dump resources in excess of capacity."
+		public static ParamString Configure_setuplocked = new ParamString("Configure_setuplocked"); // "Setup <<2>> on <<1>>\nis not available and has been deselected."
 		public static string Science_ofdatatransfer = GetLoc("Science_ofdatatransfer"); // "of data transfered"
 		public static string Science_inoperable = GetLoc("Science_inoperable"); // "The experiment is now inoperable, resetting will require a <b>Scientist</b>"
 		public static string Science_NoUsefulData = GetLoc("Science_NoUsefulData"); // "There is no more useful data here"
